@@ -58,15 +58,35 @@ const metasRealizadas = async () => {
     }
 
     await select({
-        message: "Metas realizadas",
+        message: "Metas realizadas" + realizadas.length,
         choices: [...realizadas]
     })
 }
 
+// Essa constante ela filtra para ver se está marcada a opção ou não 
+const metasAbertas = async () => {
+    const abertas = metas.filter((meta) => {
+        return meta.checked != true
+    })
+
+    // Aqui é a verificação se há metas abertas ou não
+    if(abertas.length == 0){
+        console.log("Não existem metas abertas! :)")
+        return
+    }
+
+    // Essa parte é onde espera a seleção que a pessoa vai selecionar a opção desejada e irá retornar a mensagem, se foi adicionado uma meta ou não.
+    await select({
+        message: "Metas Abertas" + abertas.length,
+        choices: [...abertas]
+    })
+}
+
+// Aqui damos o start da aplicação onde fazemos a criação do menu para selecionar as opções.
 const start = async () => {
 
     while(true){
-
+        // Criamos aqui a const de seleção de opções que aparecerá no menu.
         const opcao = await select({
             message: "Menu >",
             choices: [
@@ -79,6 +99,10 @@ const start = async () => {
                     value: "realizadas"
                 },
                 {
+                    name: "Metas abertas",
+                    value: "abertas"
+                },
+                {
                     name: "Listar metas",
                     value: "listar"
                 },
@@ -88,7 +112,7 @@ const start = async () => {
                 }
             ]
         })
-
+        // Aqui foi feito a seleção de opção onde mostra toda a parte se caso a pessoa quer cadastrar uma meta, listar e etc...
         switch(opcao) {
             case "cadastrar":
                 await cadastrarMeta()
@@ -100,6 +124,9 @@ const start = async () => {
                 break
             case "realizadas":
                 await metasRealizadas()
+                break
+            case "abertas":
+                await metasAbertas()
                 break
             case "sair":
                 console.log("Até a próxima!")
